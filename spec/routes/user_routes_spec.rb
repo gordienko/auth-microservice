@@ -49,7 +49,7 @@ RSpec.describe UserRoutes, type: :routes do # rubocop: disable Metrics/BlockLeng
         expect(last_response.status).to eq(422)
         expect(response_body['errors']).to include(
           {
-            'detail' => 'is already taken',
+            'detail' => 'Пользователь с таким email уже существует',
             'source' => {
               'pointer' => '/data/attributes/email'
             }
@@ -81,9 +81,33 @@ RSpec.describe UserRoutes, type: :routes do # rubocop: disable Metrics/BlockLeng
         expect(last_response.status).to eq(422)
         expect(response_body['errors']).to include(
           {
-            'detail' => 'is not present',
+            'detail' => 'Пароль не может быть пустым',
             'source' => {
               'pointer' => '/data/attributes/password'
+            }
+          }
+        )
+      end
+    end
+
+    context 'invalid username' do
+      let(:user_params) do
+        {
+          name: 'Invalid Username',
+          email: 'alx@example.com',
+          password: 'Password'
+        }
+      end
+
+      it 'returns an error' do
+        post '/v1', user_params
+
+        expect(last_response.status).to eq(422)
+        expect(response_body['errors']).to include(
+          {
+            'detail' => 'Имя имеет неправильный формат',
+            'source' => {
+              'pointer' => '/data/attributes/name'
             }
           }
         )

@@ -24,10 +24,10 @@ module Sessions
     end
 
     def create_session
-      @session = @user.add_session(uuid: SecureRandom.uuid)
+      @session = Session.new
 
       if @session.valid?
-        @session.save
+        @user.add_session(@session)
       else
         fail!(@session.errors)
       end

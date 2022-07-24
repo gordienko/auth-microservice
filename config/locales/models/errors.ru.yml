@@ -1,10 +1,13 @@
-en:
+ru:
+
   model:
     errors:
       user:
         name:
           blank: 'Имя не может быть пустым'
+          format: 'Имя имеет неправильный формат'
         email:
           blank: 'Email не может быть пустым'
+          no_unique: 'Пользователь с таким email уже существует'
         password:
           blank: 'Пароль не может быть пустым'

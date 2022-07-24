@@ -1,53 +1,42 @@
 # frozen_string_literal: true
 
-require 'pry'
-
-RSpec.describe Sessions::CreateService do # rubocop: disable Metrics/BlockLength
+RSpec.describe Users::CreateService do # rubocop: disable Metrics/BlockLength
   subject { described_class }
 
-  let(:name) { 'John' }
-  let(:email) { 'john@example.com' }
+  let(:user_params) do
+    {
+      name: 'John',
+      email: 'john@example.com',
+      password: password
+    }
+  end
   let(:password) { 'Pa$$W0rD' }
 
-  before { create(:user, name: name, email: email, password: password) }
-
   context 'valid parameters' do
-    let(:auth_params) do
-      {
-        email: email,
-        password: password
-      }
+    it 'creates a new user' do
+      expect { subject.call(user_params) }
+        .to change { User.count }.from(0).to(1)
     end
 
-    it 'creates a new session' do
-      expect { subject.call(auth_params) }
-        .to change { Session.count }.from(0).to(1)
-    end
+    it 'assigns user' do
+      result = subject.call(user_params)
 
-    it 'assigns session' do
-      result = subject.call(auth_params)
-
-      expect(result.session).to be_kind_of(Session)
+      expect(result.user).to be_kind_of(User)
     end
   end
 
   context 'invalid parameters' do
-    let(:auth_params) do
-      {
-        email: email,
-        password: ''
-      }
+    let(:password) { '' }
+
+    it 'does not create user' do
+      expect { subject.call(user_params) }
+        .not_to change(User, :count)
     end
 
-    it 'does not create session' do
-      expect { subject.call(auth_params) }
-        .not_to change(Session, :count)
-    end
+    it 'assigns user' do
+      result = subject.call(user_params)
 
-    it 'assigns session' do
-      result = subject.call(auth_params)
-
-      expect(result.session).to be_nil
+      expect(result.user).to be_kind_of(User)
     end
   end
 end
