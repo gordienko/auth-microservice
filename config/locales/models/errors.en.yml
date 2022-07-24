@@ -1,0 +1,10 @@
+en:
+  model:
+    errors:
+      user:
+        name:
+          blank: 'Name cannot be empty'
+        email:
+          blank: 'Email cannot be empty'
+        password:
+          blank: 'Password cannot be empty'
